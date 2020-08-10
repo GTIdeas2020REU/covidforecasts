@@ -104,6 +104,7 @@ class Navbar extends React.Component {
 						<NavLink exact activeClassName="active" className="nav-item nav-link" to={ROUTES.LANDING}>Home</NavLink>
 						<NavLink exact activeClassName="active" className="nav-item nav-link" to={ROUTES.ABOUT}>About</NavLink>
 						<NavLink exact activeClassName="active" className="nav-item nav-link" to={ROUTES.LEADERBOARD}>Top Forecasts</NavLink>
+						<NavLink exact activeClassName="active" className="nav-item nav-link" to={ROUTES.SIGN_UP}>Testysignup</NavLink>
 					</div>
 					{this.renderDropdown()}
 				</div>
