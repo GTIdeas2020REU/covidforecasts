@@ -10,7 +10,7 @@ from confirmed import get_us_new_deaths, get_us_confirmed, get_us_new_deaths_wee
 from evaluate import get_mse, get_user_mse
 from gaussian import get_gaussian_for_all
 
-app = Flask(__name__, static_folder='./build', static_url_path='/')
+app = Flask(__name__, static_folder='build', static_url_path='')
 app.secret_key = "super secret key"
 app.permanent_session_lifetime = timedelta(days=7)
 
@@ -37,7 +37,7 @@ app.config['MONGO_URI'] = "mongodb+srv://test:test@cluster0-3qghj.mongodb.net/co
 mongo = PyMongo(app)
 data = {}
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     return app.send_static_file('index.html')
 
