@@ -42,6 +42,7 @@ class Navbar extends React.Component {
 				'Content-Type': 'application/json'
 			}
 		});
+		
 	}
 
 	isLoggedIn = () => {
@@ -61,8 +62,8 @@ class Navbar extends React.Component {
 								Hello {this.state.loggedinstate['name']}!
 							</a>
 							<div className="dropdown-menu dropdown-menu-left">
-								<a className="dropdown-item" href={ROUTES.PROFILE}>My Predictions</a>
-								<a className="dropdown-item" onClick={() => this.saveLogout()} href={ROUTES.LANDING}>Sign Out</a>
+							<NavLink exact activeClassName="active" className="dropdown-item" to={ROUTES.PROFILE}>Profile</NavLink>
+							<NavLink className="dropdown-item" to={ROUTES.LANDING}><a className="dropdown-item" onClick={() => this.saveLogout()} href='/'>Sign Out</a></NavLink>
 							</div>
 						</li>
 					</ul>
@@ -77,8 +78,9 @@ class Navbar extends React.Component {
 						<li className="nav-item dropdown">
 							<a className="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Welcome</a>
 							<div className="dropdown-menu">
-								<a className="dropdown-item" href={ROUTES.SIGN_UP}>Sign Up</a>
-								<a className="dropdown-item" href={ROUTES.SIGN_IN}>Sign In</a>
+								<NavLink exact activeClassName="active" className="dropdown-item" to={ROUTES.SIGN_UP}>Sign Up</NavLink>
+								<NavLink exact activeClassName="active" className="dropdown-item" to={ROUTES.SIGN_IN}>Sign In</NavLink>
+								
 							</div>
 						</li>
 					</ul>
