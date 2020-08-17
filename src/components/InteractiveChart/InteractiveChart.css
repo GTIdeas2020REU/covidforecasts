@@ -1,16 +1,3 @@
-.chart {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 100vh;
-}
-.main-chart {
-    width: 100%;
-    height: auto;
-}
-.legend-svg {
-    width: 100%;
-    height: auto;
-}
 #confirmed{
     stroke-width : 1.5;
     stroke-linejoin: round;
@@ -52,14 +39,10 @@
 }
 
 #delete-btn {
-    position: absolute;
-    top: 63vh;
-    right: 20vw;
+    display: flex;
+    margin-top: -18.5rem;
+    margin-left: 64.2rem;
 }
-
-/* .reset-btn {
-    cursor: pointer;
-} */
 
 /*css for blinking red circle*/
 /*
@@ -173,13 +156,13 @@ font-weight: bold;
 }
 
 .speech-bubble {
-    position: relative;
-    top: -70px;
-    left: -20px;
+    position: absolute;
+    top: 745px;
+    left: 950px;
     padding:10px;
     margin:1em 0 3em;
     color:#000;
-    background:#ddd; /* default background for browsers without gradient support */
+    background:#f3961c; /* default background for browsers without gradient support */
     /* css3 */
     -webkit-border-radius:10px;
     -moz-border-radius:10px;
@@ -188,7 +171,7 @@ font-weight: bold;
 
   .speech-bubble.left {
     margin-left:50px;
-    background:#ddd;
+    background:#f3961c;
   }
   
 
@@ -196,11 +179,11 @@ font-weight: bold;
   .speech-bubble:after {
     content:"";
     position:absolute;
-    top:20px; /* value = - border-top-width - border-bottom-width */
+    bottom:20px; /* value = - border-top-width - border-bottom-width */
     left:0px; /* controls horizontal position */
     border-width:15px 15px 0; /* vary these values to change the angle of the vertex */
     border-style:solid;
-    border-color:#ddd transparent;
+    border-color:#f3961c transparent;
     /* reduce the damage in FF3.0 */
     display:block;
     width:0;
@@ -213,11 +196,5 @@ font-weight: bold;
     z-index: -999;
     bottom:auto;
     border-width:10px 50px 10px 0;
-    border-color:transparent #ddd;
+    border-color:transparent #f3961c;
   }
-.temp {
-    fill: black;
-    position: absolute;
-    left: 100px;
-    top: 100px;
-}
