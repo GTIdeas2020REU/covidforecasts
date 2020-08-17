@@ -38,8 +38,9 @@ app.config['MONGO_URI'] = "mongodb+srv://test:test@cluster0-3qghj.mongodb.net/co
 mongo = PyMongo(app)
 data = {}
 
-@app.route('/', methods=['GET'])
-def index():
+@app.route('/', defaults={'u_path': ''})
+@app.route('/<path:u_path>')
+def catch_all(u_path):
     return app.send_static_file('index.html')
 
 def add_vote(id, pred_model):
