@@ -2,13 +2,11 @@ import React from 'react';
 import { useTable } from 'react-table';
 import $ from 'jquery';
 import ReactDOM from 'react-dom';
-
 import LeaderboardChart from '../LeaderboardChart';
 import colors from '../../constants/colors';
 
-
 // Create leaderboard table, consisting of user predictions and official forecasts
-function Table({ columns, data, confirmed, orgs, forecasts, style }) {
+function Table({ columns, data, confirmed, orgs, style }) {
   // Use the state and functions returned from useTable to build UI
   const {
     getTableProps,
@@ -21,7 +19,6 @@ function Table({ columns, data, confirmed, orgs, forecasts, style }) {
     data,
     confirmed,
     orgs,
-    forecasts,
     style
   });
 
@@ -38,7 +35,7 @@ function Table({ columns, data, confirmed, orgs, forecasts, style }) {
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {<RenderOrgsTable orgs={orgs} forecasts={forecasts} confirmed={confirmed} />}
+        {<RenderOrgsTable orgs={orgs} confirmed={confirmed} />}
         {<RenderUsersTable users={data} confirmed={confirmed} />}
       </tbody>
     </table>
@@ -58,30 +55,11 @@ function createUserChart(user, confirmed, id) {
   ReactDOM.render(<LeaderboardChart userPrediction={user.prediction} confirmed={confirmed} />, document.getElementById('predictionChart'));
 }
 
-// Display official forecaster's prediction when its row is clicked on
-function createOrgChart(org, confirmed, id) {
-  var data = [];
-  for (var i = 0; i < org['target_end_date'].length; i++) {
-    var temp = {}
-    temp['date'] = org['target_end_date'][i]
-    temp['value'] = org['value'][i];
-    data.push(temp);
-  }
-  
-  $('tr').removeClass('clicked');
-  $('#' + id).addClass('clicked');
-  if (selectedID !== id) {
-    $('#predictionChart div').empty(); // reset predictionChart
-  }
-  selectedID = id;
-  ReactDOM.render(<LeaderboardChart userPrediction={data} confirmed={confirmed} />, document.getElementById('predictionChart'));
-}
-
 
 // Add rows with user data to the leaderboard table
 function RenderUsersTable({ users, confirmed }) {
   return users.map((user, index) => {
-    // ignore null MSE values
+    // ignore null values
     if (user.mse_score == null) {
       return;
     }
@@ -97,14 +75,14 @@ function RenderUsersTable({ users, confirmed }) {
 
 
 // Add rows with official forecast data to the leaderboard table
-function RenderOrgsTable({ orgs, forecasts, confirmed }) {
+function RenderOrgsTable({ orgs, confirmed }) {
   return Object.entries(orgs).map( ([key, value]) => {
-    // ignore null MSE values
+    // ignore null values
     if (value == null) {
       return;
     }
     return (
-      <tr id={key} style={{backgroundColor: colors[key]}} onClick={() => createOrgChart(forecasts[key], confirmed, key)}>
+      <tr id={key} style={{backgroundColor: colors[key]}}>
           <td>{key}*</td>
           <td>Ongoing</td>
           <td>{value.toFixed(2)}</td>
@@ -122,8 +100,7 @@ class Leaderboard extends React.Component {
       users: null,
       columns: null,
       confirmed: null,
-      orgs: null,
-      forecasts: null
+      orgs: null
     }
   }
 
@@ -153,10 +130,6 @@ class Leaderboard extends React.Component {
 
     fetch('/us-inc-deaths-confirmed-wk-avg').then(res => res.json()).then(data => {
       this.setState({ confirmed: data });
-    });
-
-    fetch('/us-inc-deaths-forecasts').then(res => res.json()).then(data => {
-      this.setState({ forecasts: data });
     });
 
   }
@@ -210,8 +183,8 @@ class Leaderboard extends React.Component {
 
     $("#delete-btn").remove();
 
-    const { users, columns, confirmed, orgs, forecasts } = this.state;
-    if (!users || !columns || !confirmed || !orgs || !forecasts) return 'Loading...';
+    const { users, columns, confirmed, orgs } = this.state;
+    if (!users || !columns || !confirmed || !orgs) return 'Loading...';
 
     return (
       <div>
@@ -221,7 +194,7 @@ class Leaderboard extends React.Component {
         <br></br>
         <br></br>
         <div className="d-flex flex-row">>
-          <Table id="leaderboard" columns={columns} data={users} confirmed={confirmed} orgs={orgs} forecasts={forecasts} style={tableStyle} />
+          <Table id="leaderboard" columns={columns} data={users} confirmed={confirmed} orgs={orgs} style={tableStyle} />
           <div id="predictionChart" className="text-center" style={chartStyle}>Click on a row to display a user's prediction!</div>
         </div>
       </div>

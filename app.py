@@ -11,10 +11,6 @@ from confirmed import get_us_new_deaths, get_us_confirmed, get_us_new_deaths_wee
 from evaluate import get_mse, get_user_mse
 from gaussian import get_gaussian_for_all
 
-from apscheduler.schedulers.background import BackgroundScheduler
-import atexit
-
-
 app = Flask(__name__, static_folder='build', static_url_path='')
 app.secret_key = "super secret key"
 app.permanent_session_lifetime = timedelta(days=7)
@@ -42,23 +38,15 @@ app.config['MONGO_URI'] = "mongodb+srv://test:test@cluster0-3qghj.mongodb.net/co
 mongo = PyMongo(app)
 data = {}
 
-
-''' Functions to update variables on daily basis '''
-def load_us_inc_confirmed():
-    us_inc_confirmed = get_us_new_deaths()
-
-def load_us_inc_confirmed_wk_avg():
-    us_inc_confirmed_wk_avg = get_us_new_deaths_weekly_avg(us_inc_confirmed)
-
-def load_us_inc_forecasts():
-    us_inc_forecasts = get_daily_forecasts()
-    
+@app.route('/', methods=['GET'])
+def index():
+    return app.send_static_file('index.html')
 
 @app.route('/', defaults={'u_path': ''})
 @app.route('/<path:u_path>')
 def catch_all(u_path):
-    return app.send_static_file('index.html')
-
+    print(repr(u_path))
+    
 def add_vote(id, pred_model):
     vote = mongo.db.votes.find_one(
         {"user_id": id})
@@ -378,17 +366,6 @@ def total():
     for model in forecast_data:
         results[model] = fetch_votes(model)
     return json.dumps(results)
-
-
-''' Schedule jobs to perform functions once a day '''
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=load_us_inc_confirmed, trigger="interval", seconds=86400)
-scheduler.add_job(func=load_us_inc_confirmed_wk_avg, trigger="interval", seconds=86400)
-scheduler.add_job(func=load_us_inc_forecasts, trigger="interval", seconds=86400)
-scheduler.start()
-
-# Shut down the scheduler when exiting the app
-atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
