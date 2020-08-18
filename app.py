@@ -11,8 +11,7 @@ from confirmed import get_us_new_deaths, get_us_confirmed, get_us_new_deaths_wee
 from evaluate import get_mse, get_user_mse
 from gaussian import get_gaussian_for_all
 
-from apscheduler.schedulers.background import BackgroundScheduler
-import atexit
+
 
 
 app = Flask(__name__, static_folder='build', static_url_path='')
@@ -384,16 +383,6 @@ def total():
         results[model] = fetch_votes(model)
     return json.dumps(results)
 
-
-''' Schedule jobs to perform functions once a day '''
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=load_us_inc_confirmed, trigger="interval", seconds=86400)
-scheduler.add_job(func=load_us_inc_confirmed_wk_avg, trigger="interval", seconds=86400)
-scheduler.add_job(func=load_us_inc_forecasts, trigger="interval", seconds=86400)
-scheduler.start()
-
-# Shut down the scheduler when exiting the app
-atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
